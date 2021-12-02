@@ -15,7 +15,7 @@ func getInput(day int) string {
 }
 
 var days = []func(string) string{
-	func(s string) string { return "" },
+	SolveFirst,
 	SolveSecond,
 }
 
