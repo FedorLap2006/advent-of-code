@@ -14,19 +14,22 @@ func getInput(day int) string {
 	return string(all)
 }
 
-var days = []func(string) string{
-	SolveFirst,
-	SolveSecond,
+var days = [][2]func(string) string{
+	{SolveFirst},
+	{SolveSecond},
+	{SolveThird, SolveThirdP2},
 }
 
 func main() {
-	if len(os.Args) < 2 {
-		log.Fatal("no day specified")
+	if len(os.Args) < 3 {
+		log.Fatal("expected day and part")
 	}
 
 	day, _ := strconv.Atoi(os.Args[1])
 	if day > len(days) {
 		log.Fatal("not yet")
 	}
-	fmt.Println(days[day-1](getInput(day)))
+	part, _ := strconv.Atoi(os.Args[2])
+
+	fmt.Println(days[day-1][part-1](getInput(day)))
 }
