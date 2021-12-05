@@ -72,3 +72,22 @@ func TestFourth(t *testing.T) {
 		assert.Equal(t, strconv.Itoa(148*13), output)
 	})
 }
+
+func TestDay5(t *testing.T) {
+	input := `0,9 -> 5,9
+8,0 -> 0,8
+9,4 -> 3,4
+2,2 -> 2,1
+7,0 -> 7,4
+6,4 -> 2,0
+0,9 -> 2,9
+3,4 -> 1,4
+0,0 -> 8,8
+5,5 -> 8,2`
+	t.Run("part 1", func(t *testing.T) {
+		assert.Equal(t, "5", SolveDay5(input))
+	})
+	t.Run("part 2", func(t *testing.T) {
+		assert.Equal(t, "12", SolveDay5P2(input))
+	})
+}

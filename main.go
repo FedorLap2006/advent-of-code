@@ -19,6 +19,7 @@ var days = [][2]func(string) string{
 	{SolveSecond},
 	{SolveThird, SolveThirdP2},
 	{SolveFourth, SolveFourthP2},
+	{SolveDay5, SolveDay5P2},
 }
 
 func main() {

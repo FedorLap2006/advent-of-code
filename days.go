@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"strconv"
 	"strings"
 )
@@ -238,4 +239,141 @@ calcScore:
 		}
 	}
 	return fmt.Sprintf("%d", score*winnerNum)
+}
+
+const spaceDim = 1000
+
+func printSpace(space [][spaceDim]int) {
+	for i := 0; i < spaceDim; i++ {
+		for j := 0; j < spaceDim; j++ {
+			if space[i][j] == 0 {
+				fmt.Print(".")
+				continue
+			}
+			fmt.Print(space[i][j])
+		}
+		fmt.Println()
+	}
+}
+
+func coverVent(space [][spaceDim]int, x, y, x2, y2 int, diagonals bool) {
+	xMax, xMin := int(math.Max(float64(x), float64(x2))), int(math.Min(float64(x), float64(x2)))
+	yMax, yMin := int(math.Max(float64(y), float64(y2))), int(math.Min(float64(y), float64(y2)))
+
+	if diagonals && xMax-xMin == yMax-yMin {
+		reverse := (x > x2 || y > y2) && !(x > x2 && y > y2)
+		startX, startY := xMin, yMin
+		if reverse {
+			startX, startY = xMin, yMax
+		}
+		for i := 0; i <= yMax-yMin; i++ {
+			for j := 0; j <= xMax-xMin; j++ {
+				if i == j {
+					if reverse {
+						space[startY-i][startX+j]++
+					} else {
+						space[startY+i][startX+j]++
+					}
+				}
+			}
+		}
+
+	} else if y == y2 {
+		for i := xMin; i <= xMax; i++ {
+			space[y][i]++
+		}
+	} else if x == x2 {
+		for i := yMin; i <= yMax; i++ {
+			space[i][x]++
+		}
+	}
+}
+
+func SolveDay5(input string) string {
+	var space [][spaceDim]int = make([][spaceDim]int, spaceDim)
+	for _, line := range strings.Split(input, "\n") {
+		coords := strings.Split(line, " -> ")
+		var pairs [2][2]int
+		for i := 0; i < 2; i++ {
+			for idx, v := range strings.Split(coords[i], ",") {
+				pairs[i][idx], _ = strconv.Atoi(v)
+			}
+		}
+		coverVent(space, pairs[0][0], pairs[0][1], pairs[1][0], pairs[1][1], false)
+	}
+	count := 0
+	for i := 0; i < spaceDim; i++ {
+		for j := 0; j < spaceDim; j++ {
+			if space[i][j] >= 2 {
+				count++
+			}
+		}
+	}
+
+	return strconv.Itoa(count)
+}
+
+func SolveDay5P2(input string) string {
+	var space [][spaceDim]int = make([][spaceDim]int, spaceDim)
+	for _, line := range strings.Split(input, "\n") {
+		coords := strings.Split(line, " -> ")
+		var pairs [2][2]int
+		for i := 0; i < 2; i++ {
+			for idx, v := range strings.Split(coords[i], ",") {
+				pairs[i][idx], _ = strconv.Atoi(v)
+			}
+		}
+		coverVent(space, pairs[0][0], pairs[0][1], pairs[1][0], pairs[1][1], true)
+	}
+	// coverVent(space, 3, 3, 1, 1, true) // false
+	// coverVent(space, 1, 1, 3, 3, true) // false
+	// coverVent(space, 9, 7, 7, 9, true) // true
+	// coverVent(space, 7, 9, 9, 7, true) // true
+	// if x > x2 {
+	// 	for i := 0; i <= y-y2; i++ {
+	// 		fmt.Println("khm")
+	// 		for j := 0; j <= x-x2; j++ {
+	// 			if i == j {
+	// 				space[y+i][x-j]++
+	// 			}
+	// 		}
+	// 	}
+
+	// } else {
+	// 	for i := 0; i <= y2-y; i++ {
+	// 		for j := 0; j <= x2-x; j++ {
+	// 			hidx := x + j
+	// 			if i == j {
+	// 				space[y+i][hidx]++
+	// 			}
+	// 		}
+	// 	}
+
+	// }
+	// space[7][9]++
+	// space[8][8]++
+	// space[9][7]++
+	/*
+		for i := 0; i <= 9-7; i++ {
+			fmt.Println("khm")
+			for j := 0; j <= 9-7; j++ {
+				if i == j {
+					space[7+i][9-j]++
+				}
+			}
+		}
+
+	*/
+	// printSpace(space)
+	count := 0
+	for i := 0; i < spaceDim; i++ {
+		for j := 0; j < spaceDim; j++ {
+			if space[i][j] >= 2 {
+				count++
+			}
+		}
+	}
+
+	return strconv.Itoa(count)
+
 }
