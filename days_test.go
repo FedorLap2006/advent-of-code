@@ -91,3 +91,14 @@ func TestDay5(t *testing.T) {
 		assert.Equal(t, "12", SolveDay5P2(input))
 	})
 }
+
+func TestDay6(t *testing.T) {
+	input := `3,4,3,1,2`
+
+	t.Run("part 1", func(t *testing.T) {
+		assert.Equal(t, "5934", SolveDay6(input))
+	})
+	t.Run("part 2", func(t *testing.T) {
+		assert.Equal(t, "26984457539", SolveDay6P2(input))
+	})
+}

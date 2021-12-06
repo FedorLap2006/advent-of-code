@@ -1,6 +1,7 @@
 package main
 
 import (
+	"container/list"
 	"fmt"
 	"math"
 	"strconv"
@@ -319,4 +320,74 @@ func SolveDay5P2(input string) string {
 	}
 
 	return strconv.Itoa(space.countSafe(2))
+}
+
+type Lanternfish int
+
+func (t *Lanternfish) Reproduce() (Lanternfish, bool) {
+	if *t < 0 {
+		*t = 6
+		return 9, true
+	}
+	return 0, false
+}
+
+func (t *Lanternfish) Tick() {
+	*t--
+}
+
+func printAllFish(fish *list.List) {
+	count := [11]int{}
+	for e := fish.Front(); e != nil; e = e.Next() {
+		count[int(e.Value.(Lanternfish))]++
+	}
+	fmt.Println(count)
+}
+
+func SolveDay6(input string) string {
+	var fish = list.New()
+	for _, v := range strings.Split(input, ",") {
+		age, _ := strconv.Atoi(v)
+		fish.PushBack(Lanternfish(age))
+	}
+	// fmt.Printf("Initial state: ")
+	// printAllFish(fish)
+
+	for i := 0; i < 80; i++ {
+		for e := fish.Front(); e != nil; e = e.Next() {
+			current := e.Value.(Lanternfish)
+			current.Tick()
+			if newFish, ready := current.Reproduce(); ready {
+				fish.PushBack(newFish)
+			}
+			e.Value = current
+		}
+		printAllFish(fish)
+		// fmt.Printf("After %d days: ", i+1)
+		// printAllFish(fish)
+	}
+
+	return fmt.Sprintf("%d", fish.Len())
+}
+
+func SolveDay6P2(input string) string {
+	var fish [8 + 1]int
+	for _, v := range strings.Split(input, ",") {
+		timer, _ := strconv.Atoi(v)
+		fish[timer]++
+	}
+
+	for i := 0; i < 256; i++ {
+		var zero int = fish[0]
+		for timer, count := range fish[1:] {
+			fish[timer] = count
+		}
+		fish[6] += zero
+		fish[8] = zero
+	}
+	count := 0
+	for _, v := range fish {
+		count += v
+	}
+	return fmt.Sprintf("%d", count)
 }
