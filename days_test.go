@@ -102,3 +102,14 @@ func TestDay6(t *testing.T) {
 		assert.Equal(t, "26984457539", SolveDay6P2(input))
 	})
 }
+
+func TestDay7(t *testing.T) {
+	input := `16,1,2,0,4,2,7,1,2,14`
+
+	t.Run("p1", func(t *testing.T) {
+		assert.Equal(t, "37", SolveDay7(input))
+	})
+	t.Run("p2", func(t *testing.T) {
+		assert.Equal(t, "168", SolveDay7P2(input))
+	})
+}

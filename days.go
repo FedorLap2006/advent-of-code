@@ -391,3 +391,66 @@ func SolveDay6P2(input string) string {
 	}
 	return fmt.Sprintf("%d", count)
 }
+
+type CrabSubmarine struct {
+	Position int
+}
+
+func (c CrabSubmarine) MovingCost(position int) int {
+	n := int(math.Abs(float64(c.Position - position)))
+	return n * (n + 1) / 2
+}
+
+func SolveDay7(input string) string {
+	positions := []int{}
+	for _, posRaw := range strings.Split(input, ",") {
+		position, _ := strconv.Atoi(posRaw)
+		positions = append(positions, position)
+	}
+
+	min := math.MaxInt32
+	for i, v := range positions {
+		sum := 0
+		for j, other := range positions {
+			if j == i {
+				continue
+			}
+			// fmt.Printf("Move from %d to %d: %d fuel\n", v, other, int(math.Abs(float64(other-v))))
+			sum += int(math.Abs(float64(other - v)))
+		}
+		// fmt.Printf("Sum (based on %d): %d\n", v, sum)
+		if sum < min {
+			// fmt.Println("Found minimum")
+			min = sum
+		}
+	}
+
+	return fmt.Sprintf("%d", min)
+}
+
+func SolveDay7P2(input string) string {
+	positions := []CrabSubmarine{}
+	maxPosition := 0
+	for _, posRaw := range strings.Split(input, ",") {
+		position, _ := strconv.Atoi(posRaw)
+		if position > maxPosition {
+			maxPosition = position
+		}
+		positions = append(positions, CrabSubmarine{Position: position})
+	}
+	min := math.MaxInt32
+	for v := 0; v <= maxPosition*2; v++ {
+		sum := 0
+		for _, other := range positions {
+			// fmt.Printf("Move from %d to %d: %d fuel\n", v, other, other.MovingCost(v))
+			sum += other.MovingCost(v)
+		}
+		// fmt.Printf("Sum (based on %d): %d\n", v, sum)
+		if sum < min {
+			// fmt.Println("Found minimum")
+			min = sum
+		}
+	}
+
+	return fmt.Sprintf("%d", min)
+}
